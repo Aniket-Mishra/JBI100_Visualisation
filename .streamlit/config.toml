@@ -1,0 +1,22 @@
+[theme]
+primaryColor = "#EF233C"  # Vivid Red for highlights
+backgroundColor = "#2B2D42"  # Dark Grey for main background
+secondaryBackgroundColor = "#3C3F58"  # Medium Grey for secondary sections
+textColor = "#EDF2F4"  # Light Grey for text
+font = "monospace"  # Optional: "serif" or "sans-serif"
+
+
+[server]
+headless = true
+enableCORS = false
+port = 8080
+
+[caching]
+maxEntries = 500
+ttl = 7200  # Keep cache valid for 2 hours
+
+[server.fileWatcher]
+watcherType = "poll"
+
+[layout]
+wideMode = true
