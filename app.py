@@ -63,9 +63,6 @@ graph_choice = st.sidebar.selectbox(
     options=[
         "Trends Over Time",
         "Monthly Trends",
-        # "Most Dangerous Sharks",
-        # "Shark Incidents by Injury Type",
-        # "Victim Activities and Shark Attacks",
         "Shark Related Information",
         "Attack Severity by Site",
         "Custom Grouped Bar Charts",
