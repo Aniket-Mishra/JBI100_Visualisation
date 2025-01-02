@@ -1,209 +1,223 @@
-import numpy as np
 import pandas as pd
-import matplotlib
-import matplotlib.pyplot as plt
+from dateutil.relativedelta import relativedelta
 
+import plotly.express as px
 import plotly.graph_objects as go
 
-import chart_studio.plotly as py
 import cufflinks as cf
-import seaborn as sns
-import plotly.express as px
 import plotly.io as pio
 
 cf.go_offline()
 
-import datapane as dp
-
 import streamlit as st
+
+from graph_functions import *
 
 px.defaults.width = 875
 px.defaults.height = 650
 
-pio.templates["custom"] = go.layout.Template(layout=go.Layout(width=800, height=600))
-
-# Set the default template to your custom template
-pio.templates.default = "custom"
-
-df = pd.read_excel(
-    "/Users/paniket/TU_Eindhoven/2_Study/Q2_JBI100_Visualisation_4/4_Code/JBI100_Visualisation/JBI100_Data_2024_2025/Australian_Shark_Incidents/Australian Shark-Incident Database Public Version.xlsx",
-    sheet_name="ASID",
+pio.templates["custom"] = go.layout.Template(
+    layout=go.Layout(width=800, height=600)
 )
 
+pio.templates.default = "custom"
+
+data_path = "/Users/paniket/TU_Eindhoven/2_Study/Q2_JBI100_Visualisation_4/4_Code/JBI100_Visualisation/data/filtered_cleaned_shark_data.csv"
+df = pd.read_csv(data_path)
+df["month_year"] = pd.to_datetime(df["month_year"])
+
+# Set page configuration
 st.set_page_config(
     page_title="Shark Incident Visualizations",
+    page_icon="/Users/paniket/TU_Eindhoven/2_Study/Q2_JBI100_Visualisation_4/4_Code/JBI100_Visualisation/images/shark_smile.png",
     layout="wide",
 )
 
-st.markdown(
-    """
-    <style>
-    /* Dropdown container */
-    div[data-baseweb="select"] {
-        background-color: #3C3F58; /* Medium grey background */
-        color: #EDF2F4; /* Light grey text */
-        border-radius: 8px; /* Rounded corners */
-        border: 1px solid #8D99AE; /* Grey-blue border */
-    }
+st.title("Interactive Shark Attack Data Explorer")
+st.sidebar.title("Filter Options")
 
-    /* Dropdown hover and selected options */
-    div[data-baseweb="select"] > div {
-        background-color: #3C3F58 !important; /* Match dropdown background */
-        color: #EDF2F4 !important;
-    }
+min_year = int(df["incident_year"].min())
+max_year = int(df["incident_year"].max())
 
-    /* Dropdown list options */
-    ul {
-        background-color: #3C3F58 !important; /* Medium grey background for list */
-        color: #8D99AE !important; /* Grey-blue text */
-    }
-
-    /* Hover effect for options */
-    ul > li:hover {
-        background-color: #EF233C !important; /* Vivid red highlight */
-        color: #EDF2F4 !important; /* Light text */
-    }
-
-    /* Selected option styling */
-    ul > li[aria-selected="true"] {
-        background-color: #8D99AE !important; /* Grey-blue for selected */
-        color: #EDF2F4 !important; /* White text for contrast */
-    }
-    .element-container {
-        width: 95% !important;
-        margin: auto;
-    }
-    div.block-container {
-        max-width: 85%;
-        padding: 50px;
-        margin: auto;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
+start_year, end_year = st.sidebar.slider(
+    "Select Date Range",
+    min_value=min_year,
+    max_value=max_year,
+    value=(1900, 2000),
 )
 
-
-# st.title("Interactive Shark Attack Data Explorer")
-st.sidebar.header("Filter Options")
-
-year_range = st.sidebar.slider(
-    "Select Year Range",
-    int(df["Incident.year"].min()),
-    int(df["Incident.year"].max()),
-    (1900, 2023),
-)
 filtered_data = df[
-    (df["Incident.year"] >= year_range[0]) & (df["Incident.year"] <= year_range[1])
+    (df["incident_year"] >= start_year) & (df["incident_year"] <= end_year)
 ]
 
 state_filter = st.sidebar.multiselect(
-    "Select State(s)", options=df["State"].unique(), default=df["State"].unique()
+    "Select State(s)",
+    options=df["state_names"].unique(),
+    default=df["state_names"].unique(),
 )
-filtered_data = filtered_data[filtered_data["State"].isin(state_filter)]
+filtered_data = filtered_data[filtered_data["state_names"].isin(state_filter)]
 
-fig1 = px.line(
-    filtered_data.groupby("Incident.year").size().reset_index(name="Count"),
-    x="Incident.year",
-    y="Count",
-    title="Shark Attacks Over Time",
-    labels={"Incident.year": "Year", "Count": "Number of Incidents"},
-)
-# st.plotly_chart(fig1, key="fig1")
-
-
-fig2 = px.histogram(
-    filtered_data,
-    x="Site.category",
-    color="Injury.severity",
-    title="Attack Severity by Site Category",
-    labels={"Site.category": "Site Category", "Injury.severity": "Severity"},
-)
-# st.plotly_chart(fig2, key="fig2")
-
-
-print(filtered_data["Shark.length.m"].isnull().sum())
-print(filtered_data["Shark.length.m"].unique())
-
-filtered_data["Shark.length.m"] = pd.to_numeric(
-    filtered_data["Shark.length.m"], errors="coerce"
-)
-
-filtered_data["Shark.length.m"] = filtered_data["Shark.length.m"].fillna(1)
-
-
-fig3 = px.scatter_geo(
-    filtered_data,
-    lat="Latitude",
-    lon="Longitude",
-    color="Injury.severity",
-    size="Shark.length.m",
-    title="Geographic Distribution of Shark Attacks",
-    labels={"Latitude": "Latitude", "Longitude": "Longitude"},
-    projection="natural earth",
-    width=800,  # Set the width of the figure
-    height=600,  # Set the height of the figure
-)
-
-# fig3.show()
-
-fig4 = px.bar(
-    filtered_data,
-    x="Victim.activity",
-    color="Provoked/unprovoked",
-    title="Victim Activities and Provocation",
-    labels={"Victim.activity": "Activity", "Provoked/unprovoked": "Provocation Type"},
-)
-# st.plotly_chart(fig4, key="fig4")
-
-fig5 = px.bar(
-    filtered_data,
-    x="Shark.common.name",
-    color="Injury.severity",
-    title="Shark Species Involved in Incidents",
-    labels={"Shark.common.name": "Shark Species", "Injury.severity": "Severity"},
-)
-# st.plotly_chart(fig5, key="fig5")
-
-fig_severity = px.pie(
-    filtered_data,
-    names="Injury.severity",
-    title="Severity of Shark Attacks",
-    hole=0.4,  # Donut chart
-    labels={"Injury.severity": "Severity"},
-    color_discrete_sequence=px.colors.sequential.RdBu,  # Colorblind-friendly palette
-)
-
-fig_severity.add_annotation(
-    text="Fatal cases make up 15%",
-    x=0.5,
-    y=0.5,
-    showarrow=False,
-    font=dict(size=14, color="red"),
-    align="center",
-)
 
 graph_choice = st.sidebar.selectbox(
     "Select a Graph to Display",
     options=[
-        "Shark Attacks Over Time",
-        "Attack Severity by Site Category",
-        "Geographic Distribution",
-        "Victim Activity and Provocation",
-        "Shark Species Involved",
-        "Injury Severity",
+        "Trends Over Time",
+        "Monthly Trends",
+        # "Most Dangerous Sharks",
+        # "Shark Incidents by Injury Type",
+        # "Victim Activities and Shark Attacks",
+        "Shark Related Information",
+        "Attack Severity by Site",
+        "Custom Grouped Bar Charts",
     ],
 )
 
-if graph_choice == "Shark Attacks Over Time":
-    st.plotly_chart(fig1, use_container_width=True)
-elif graph_choice == "Attack Severity by Site Category":
-    st.plotly_chart(fig2, use_container_width=True)
-elif graph_choice == "Geographic Distribution":
-    st.plotly_chart(fig3, use_container_width=True)
-elif graph_choice == "Victim Activity and Provocation":
-    st.plotly_chart(fig4, use_container_width=True)
-elif graph_choice == "Shark Species Involved":
-    st.plotly_chart(fig5, use_container_width=True)
-elif graph_choice == "Injury Severity":
-    st.plotly_chart(fig_severity, use_container_width=True)
+if graph_choice == "Trends Over Time":
+    st.sidebar.subheader("Trends Over Time Options")
+    trend_option = st.sidebar.radio(
+        "Select an option:",
+        options=["All incidents over time", "Custom Filters"],
+        index=0,
+    )
+
+    if trend_option == "All incidents over time":
+        fig = get_incidents_over_time(filtered_data)
+    else:
+        category_col = st.sidebar.selectbox(
+            "Select Category to Separate By:",
+            options=[
+                "provoked_unprovoked",
+                "victim_injury",
+                "site_category_cleaned",
+                "victim_gender",
+                "victim_activity",
+            ],
+        )
+
+        custom_data = (
+            filtered_data.groupby(["incident_year", category_col])
+            .size()
+            .reset_index(name="attack_count")
+        )
+
+        line_graph = go.Figure()
+        unique_categories = custom_data[category_col].unique()
+        color_map = px.colors.qualitative.Safe[: len(unique_categories)]
+
+        for category, color in zip(unique_categories, color_map):
+            filtered_category_data = custom_data[
+                custom_data[category_col] == category
+            ]
+            line_graph.add_trace(
+                go.Scatter(
+                    x=filtered_category_data["incident_year"],
+                    y=filtered_category_data["attack_count"],
+                    mode="lines",
+                    line=dict(color=color, width=2),
+                    name=str(category).capitalize(),
+                )
+            )
+
+        line_graph.update_layout(
+            title=f"Shark Incidents Over Time by {category_col.replace('_', ' ').capitalize()}",
+            xaxis_title="Year",
+            yaxis_title="Number of Incidents",
+            font=dict(color="#00796b", size=12),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False),
+            legend_title=category_col.replace("_", " ").capitalize(),
+        )
+
+        fig = line_graph
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+elif graph_choice == "Monthly Trends":
+    separate_graphs = st.sidebar.radio(
+        "Separate Graphs:", options=["True", "False"], index=1
+    )
+
+    if separate_graphs == "True":
+        scale_y = st.sidebar.checkbox("Scale Y Axis", value=False)
+        monthly_data, month_names = prepare_incident_data(filtered_data)
+        fig = create_subplots_monthly_incident(
+            monthly_data, month_names, scale_y=scale_y
+        )
+    else:
+        monthly_data, month_names = prepare_incident_data(filtered_data)
+        fig = create_multi_bar_monthly_incident(monthly_data, month_names)
+
+    st.plotly_chart(fig, use_container_width=True)
+
+elif graph_choice == "Shark Related Information":
+    st.sidebar.subheader("Shark Related Options")
+    shark_option = st.sidebar.radio(
+        "Select an option:",
+        options=[
+            "Most Dangerous Sharks",
+            "Shark Incidents by Injury Type",
+            "Victim Activities and Shark Attacks",
+        ],
+        index=0,
+    )
+
+    if shark_option == "Most Dangerous Sharks":
+        fig = create_top_sharks_chart(filtered_data)
+    elif shark_option == "Shark Incidents by Injury Type":
+        fig = create_incident_by_shark_chart(filtered_data)
+    elif shark_option == "Victim Activities and Shark Attacks":
+        fig = compare_victim_activity_vs_provoked(filtered_data)
+
+    st.plotly_chart(fig, use_container_width=True)
+elif graph_choice == "Attack Severity by Site":
+    fig = create_attack_severity_chart(filtered_data)
+    st.plotly_chart(fig, use_container_width=True)
+elif graph_choice == "Custom Grouped Bar Charts":
+    x_col = st.sidebar.selectbox(
+        "Select X-Axis Column:",
+        options=[
+            "shark_common_name",
+            "site_category_cleaned",
+            "victim_activity",
+        ],
+    )
+    y_col = st.sidebar.selectbox(
+        "Select Y-Axis Column:", options=["count"], index=0
+    )
+    color_col = st.sidebar.selectbox(
+        "Select Color Grouping Column:",
+        options=["victim_injury", "provoked_unprovoked", "injury_severity"],
+    )
+    title = st.sidebar.text_input("Chart Title:", "Custom Grouped Bar Chart")
+    x_label = st.sidebar.text_input("X-Axis Label:", "X-Axis")
+    y_label = st.sidebar.text_input("Y-Axis Label:", "Y-Axis")
+
+    bar_chart_data = (
+        filtered_data.groupby([x_col, color_col])
+        .size()
+        .reset_index(name="count")
+    )
+
+    fig = px.bar(
+        bar_chart_data,
+        x=x_col,
+        y=y_col,
+        color=color_col,
+        title=title,
+        labels={x_col: x_label, y_col: y_label, color_col: "Category"},
+        barmode="group",
+        color_discrete_sequence=px.colors.qualitative.Safe,
+    )
+
+    fig.update_layout(
+        font=dict(color="#00796b", size=12),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False),
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
