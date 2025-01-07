@@ -775,20 +775,81 @@ def create_grouped_bar_chart(
     return bar_graph
 
 
-# create_grouped_bar_chart(
-#     df=shark_data,
-#     x_col="site_category_cleaned",
-#     color_col="victim_injury",
-#     title="Injury Type by Victim Gender",
-#     x_label="Injury Type",
-#     color_label="Gender"
-# )
+def line_chart_on_category(df, category_col, time_col):
+    custom_data = (
+        df.groupby([time_col, category_col])
+        .size()
+        .reset_index(name="attack_count")
+    )
 
-# create_grouped_bar_chart(
-#     df=shark_data,
-#     x_col="site_category_cleaned",
-#     color_col="injury_severity",
-#     title="Attack Severity by Site Category",
-#     x_label="Site Category",
-#     color_label="Severity"
-# )
+    line_graph = go.Figure()
+    unique_categories = custom_data[category_col].unique()
+    color_map = px.colors.qualitative.Safe[: len(unique_categories)]
+
+    for category, color in zip(unique_categories, color_map):
+        filtered_category_data = custom_data[
+            custom_data[category_col] == category
+        ]
+        line_graph.add_trace(
+            go.Scatter(
+                x=filtered_category_data[time_col],
+                y=filtered_category_data["attack_count"],
+                mode="lines",
+                line=dict(color=color, width=2),
+                name=str(category).capitalize(),
+            )
+        )
+
+    line_graph.update_layout(
+        title=f"Shark Incidents Over Time by {category_col.replace('_', ' ').capitalize()}",
+        xaxis_title="Year",
+        yaxis_title="Number of Incidents",
+        font=dict(color="#00796b", size=12),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False),
+        legend_title=category_col.replace("_", " ").capitalize(),
+    )
+    return line_graph
+
+
+def create_bar_chart(data, categorical_col):
+    """
+    Creates a simple bar chart showing the count of each category in the given column.
+
+    Parameters:
+        data (pd.DataFrame): The input dataframe.
+        categorical_col (str): The name of the categorical column to count.
+        title (str): The title of the bar chart.
+
+    Returns:
+        go.Figure: A Plotly figure object representing the bar chart.
+    """
+    # Count the occurrences of each category
+    category_counts = data[categorical_col].value_counts().reset_index()
+    category_counts.columns = [categorical_col, "count"]
+    title = f"""Count of {categorical_col.replace("_", " ").title()}"""
+
+    # Create the bar chart
+    fig = px.bar(
+        category_counts,
+        x=categorical_col,
+        y="count",
+        title=title,
+        labels={
+            categorical_col: categorical_col.replace("_", " ").capitalize(),
+            "count": "Count",
+        },
+    )
+    fig.update_traces(marker_color="#00796b")
+
+    fig.update_layout(
+        font=dict(size=12, color="#00796b"),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False),
+    )
+
+    return fig
