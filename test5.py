@@ -3,11 +3,12 @@ import pandas as pd
 from dash import Dash, dcc, html, Input, Output, State, ctx
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
+from dash.exceptions import PreventUpdate
 
 data_path = "/Users/paniket/TU_Eindhoven/2_Study/Q2_JBI100_Visualisation_4/4_Code/JBI100_Visualisation/data/filtered_cleaned_shark_data.csv"
 df = pd.read_csv(data_path)
+df = df.loc[df["provoked_unprovoked"] != "unknown"]
 
-# Initialize the app with a Bootstrap theme
 app = Dash(
     __name__,
     external_stylesheets=[dbc.themes.SUPERHERO, dbc.icons.FONT_AWESOME],
@@ -52,18 +53,29 @@ checkbox_radio_group = html.Div(
     ],
 )
 
-reset_button = dbc.Button(
-    "Reset Selection", id="reset-button", color="secondary", className="mt-3"
+reset_buttons = dbc.ButtonGroup(
+    [
+        dbc.Button(
+            "Reset Graphs",
+            id="reset-button",
+            color="primary",
+        ),
+        dbc.Button(
+            "Reset Filters",
+            id="reset-filters-button",
+            color="primary",
+        ),
+    ]
 )
 
 page_buttons = dbc.ButtonGroup(
     [
-        dbc.Button("General Information", href="/", color="primary"),
-        dbc.Button("Monthly Information", href="/monthly", color="primary"),
+        dbc.Button("General Information", color="primary"),
+        dbc.Button("Monthly Information", color="primary"),
+        dbc.Button("Shark Information", color="primary"),
+        dbc.Button("Victim Information", color="primary"),
     ]
 )
-
-sparkyshark_box = html.Div("SparkyShark", className="text-box")
 
 
 # Define the shared layout structure
@@ -73,9 +85,9 @@ def shared_layout(content_div):
             dbc.Row(
                 dbc.Col(
                     html.H1(
-                        "Australian Shark Incident Data Analysis - Center of Page",
-                        className="text-center text-light mb-4",
-                        style={"paddingTop": "10px"},
+                        "Australian Shark Incident Data Analysis",
+                        className="text-center mb-4",
+                        style={"paddingTop": "10px", "color": "#26a69a"},
                     )
                 )
             ),
@@ -95,8 +107,8 @@ def shared_layout(content_div):
                         className="grid-item", children=page_buttons
                     ),  # 6fr page links
                     html.Div(
-                        className="grid-item", children=sparkyshark_box
-                    ),  # 3fr SparkyShark
+                        className="grid-item", children=reset_buttons
+                    ),  # 3fr reset
                     html.Div(className="grid-item"),  # 1fr empty space
                 ],
             ),
@@ -117,14 +129,22 @@ def general_content():
             dbc.Row(
                 [
                     dbc.Col(
-                        dcc.Graph(id="incident-trend"),
+                        dcc.Graph(
+                            id="incident-trend",
+                            style={"width": "100%", "height": "100%"},
+                        ),
                         width=8,
-                        style={"height": "110%"},
+                        style={"height": "98%"},
                     ),
                     dbc.Col(
-                        [dcc.Graph(id="victim-injury-bar"), reset_button],
+                        [
+                            dcc.Graph(
+                                id="victim-injury-bar",
+                                style={"width": "100%", "height": "100%"},
+                            ),
+                        ],
                         width=4,
-                        style={"height": "110%"},
+                        style={"height": "98%"},
                     ),
                 ],
                 className="h-100",
@@ -218,6 +238,14 @@ def update_graphs(
                 )
             ]
         )
+        line_fig.update_layout(
+            font=dict(color="#26a69a", size=18),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False),
+            # transition={"duration": 800, "easing": "sin-in-out"},
+        )
         injury_counts = (
             filtered_data["victim_injury"].value_counts().reset_index()
         )
@@ -227,6 +255,15 @@ def update_graphs(
                     x=injury_counts["victim_injury"], y=injury_counts["count"]
                 )
             ]
+        )
+        bar_fig.update_traces(marker_color="#26a69a")
+        bar_fig.update_layout(
+            font=dict(color="#26a69a", size=18),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False),
+            transition={"duration": 800, "easing": "sin-in-out"},
         )
 
         return line_fig, bar_fig, None, None
@@ -288,6 +325,14 @@ def update_graphs(
                 )
             ]
         )
+        line_fig.update_layout(
+            font=dict(color="#26a69a", size=18),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False),
+            # transition={"duration": 800, "easing": "sin-in-out"},
+        )
     else:  # separate
         provoked_data = filtered_data[
             filtered_data["provoked_unprovoked"] == "provoked"
@@ -320,10 +365,26 @@ def update_graphs(
                     x=unprovoked_agg["incident_year"],
                     y=unprovoked_agg["unprovoked_count"],
                     mode="lines",
-                    line=dict(color="#42a5f5"),
+                    line=dict(color="#ab47bc"),
                     name="Unprovoked Incidents",
                 ),
             ]
+        )
+        line_fig.update_layout(
+            legend=dict(
+                orientation="h",
+                x=0.5,
+                y=-0.1,
+                xanchor="center",
+                yanchor="top",
+                font=dict(size=12, color="#26a69a"),
+            ),
+            font=dict(color="#26a69a", size=18),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False),
+            # transition={"duration": 800, "easing": "sin-in-out"},
         )
 
     injury_counts = filtered_data["victim_injury"].value_counts().reset_index()
@@ -336,7 +397,16 @@ def update_graphs(
                 )
             ]
         )
-    else:  # separate
+        bar_fig.update_traces(marker_color="#26a69a")
+        bar_fig.update_layout(
+            font=dict(color="#26a69a", size=18),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False),
+            transition={"duration": 800, "easing": "sin-in-out"},
+        )
+    else:
         provoked_counts = (
             filtered_data[filtered_data["provoked_unprovoked"] == "provoked"][
                 "victim_injury"
@@ -370,12 +440,47 @@ def update_graphs(
                     x=combined_counts["victim_injury"],
                     y=combined_counts["unprovoked_count"],
                     name="Unprovoked",
-                    marker_color="#42a5f5",
+                    marker_color="#ab47bc",
                 ),
             ]
         )
+        bar_fig.update_layout(
+            legend=dict(
+                orientation="h",
+                x=0.5,
+                y=-0.1,
+                xanchor="center",
+                yanchor="top",
+                font=dict(size=12, color="#26a69a"),
+            ),
+            font=dict(color="#26a69a", size=18),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=False),
+            margin=dict(t=20, b=100),
+            transition={"duration": 800, "easing": "sin-in-out"},
+        )
 
     return line_fig, bar_fig, bar_click, trend_relayout
+
+
+@app.callback(
+    [
+        Output("dropdown-states", "value"),
+        Output("checkbox-items", "value"),
+        Output("radio-together-separate", "value"),
+    ],
+    Input("reset-filters-button", "n_clicks"),
+)
+def reset_app(n_clicks):
+    if n_clicks:
+        return (
+            df["state_names"].unique().tolist(),
+            ["provoked", "unprovoked"],
+            "together",
+        )
+    raise PreventUpdate
 
 
 if __name__ == "__main__":
