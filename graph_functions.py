@@ -13,8 +13,7 @@ import re
 
 
 # Setup functions for common plot functions
-def get_top_victim_activities(df, top_index) -> pd.DataFrame:
-    local_df = df.copy()
+def get_top_victim_activities(local_df, top_index) -> pd.DataFrame:
     top_activities = (
         local_df["victim_activity"].value_counts().index[:top_index]
     )
@@ -429,6 +428,7 @@ def create_top_sharks_chart(df) -> px.bar:
         yaxis_title="Number of Incidents",
         showlegend=False,
     )
+    bar_graph.update_traces(marker_color="#00796b")
 
     return bar_graph
 

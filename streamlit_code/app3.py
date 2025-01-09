@@ -37,8 +37,8 @@ def render_plotly_ui(df: pd.DataFrame):
     incidents_over_time_fig = get_incidents_over_time(df)
 
     categorical_col = "victim_injury"
-    victim_injur_counts_fig = create_bar_chart(df, categorical_col)
-    # victim_injur_counts_fig.update_layout(
+    victim_injury_counts_fig = create_bar_chart(df, categorical_col)
+    # victim_injury_counts_fig.update_layout(
     #     margin=dict(l=25, r=25, t=25, b=25),
     #     # width=500,
     #     # height=500,

@@ -1,0 +1,198 @@
+/* assets/style.css */
+
+/* Grid for the top section */
+.top-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+/* Styling for graph placeholders */
+.graph-container {
+    border: 1px solid white;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Center alignment for elements */
+.text-center {
+    text-align: center;
+}
+
+/* Right alignment for elements */
+.text-end {
+    text-align: end;
+}
+
+/* CSS grid for the top section */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr 6fr 2fr 1fr;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.grid-item {
+    text-align: center;
+}
+
+.text-box {
+    border: 1px solid white;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1); /* Slight transparency */
+}
+
+.dropdown-container {
+    background-color: #26a69a !important;
+    color: #121212 !important;
+}
+
+/* Dropdown control area (selected options) */
+.dropdown-container .Select-control {
+    background-color: #26a69a !important; /* Default green for selected region */
+    color: #121212 !important;
+    border: none;
+}
+
+/* Dropdown menu options (both in dropdown and selected region) */
+.dropdown-container .Select-option,
+.dropdown-container .Select--multi .Select-value {
+    background-color: #26a69a !important;
+    color: #121212 !important;
+    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth transition */
+}
+
+/* Hover effect for dropdown menu options and selected region options */
+.dropdown-container .Select-option:hover,
+.dropdown-container .Select--multi .Select-value:hover {
+    background-color: #b2dfdb !important;
+    color: #121212 !important;
+}
+
+/* Active state (when clicking an option) */
+.dropdown-container .Select-option:active {
+    background-color: #26a69a !important;
+    color: #121212 !important;
+    transition: none !important;
+}
+
+/* Selected option state */
+.dropdown-container .Select-option.is-selected {
+    background-color: #26a69a !important;
+    color: #121212 !important;
+    transition: none !important;
+}
+
+/* Focused state (when navigating with keyboard) */
+.dropdown-container .Select-option.is-focused {
+    background-color: #b2dfdb !important;
+    color: #121212 !important;
+}
+
+/* Dropdown menu */
+.dropdown-container .Select-menu {
+    background-color: #26a69a !important;
+}
+
+
+
+/* Center-align and space radio items */
+.radio-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Align radio buttons to the left */
+    gap: 5px; /* Add space between radio items */
+    /* background-color: #643434; */
+}
+
+.radio-container .form-check-inline {
+    display: inline-flex;
+    align-items: right; /* Vertically center radio buttons and labels */
+    gap: 10px; /* Add space between radio buttons and labels */
+
+}
+
+.btn-primary {
+    background-color: #26a69a !important;
+    color: #121212 !important;
+    border: none !important;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Hover state for buttons */
+.btn-primary:hover {
+    background-color: #b2dfdb !important; /* Lighter green when hovered */
+    color: #121212 !important;
+}
+
+/* Active/selected button styling */
+.btn-primary:active, 
+.btn-primary.active, 
+.btn-primary:focus {
+    background-color: #b2dfdb !important; /* Lighter green */
+    color: #121212 !important;
+    /* box-shadow: none !important; */
+    outline: none !important;
+}
+
+
+
+/* CSS grid for the boxes under the top bar */
+.box-container {
+    display: grid;
+    grid-template-columns: 1fr 6fr 4fr 1fr; /* 1:6:4:1 layout */
+    gap: 20px; /* Space between grid items */
+    height: 50vh; /* Dynamic height based on viewport */
+    margin-top: 20px; /* Add some space above the grid */
+}
+
+/* Style for the boxes */
+.box {
+    border: 1px solid white;
+    background-color: rgba(255, 255, 255, 0.1); /* Slight transparency */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    height: 100%; /* Fill the available height */
+}
+
+
+/* Make the parent container occupy the remaining viewport height */
+.page-content {
+    height: calc(100vh - 120px); /* Adjust for the navbar and top bar height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Dynamic row for the boxes */
+.dynamic-height-row {
+    display: flex; /* Use flexbox to align boxes side by side */
+    flex-grow: 1; /* Row dynamically adjusts to fill the remaining height */
+    gap: 20px; /* Add spacing between columns */
+}
+
+/* Make the graph boxes proportional */
+/* Make the graph boxes proportional */
+.graph-container {
+    width: 100%; /* Full width of the column */
+    height: 100%; /* Full height of the parent container */
+    border: 1px solid white;
+    background-color: rgba(255, 255, 255, 0.1); /* Slight transparency */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    font-size: 16px; /* Text size for demo purposes */
+    font-weight: bold;
+    color: white;
+    /* background-color: red; */
+}
