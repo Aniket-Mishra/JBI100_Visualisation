@@ -29,10 +29,11 @@
 /* CSS grid for the top section */
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr 6fr 2fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 7fr 4fr 7fr 3fr 1fr;
+    gap: 10px;
     align-items: center;
-    margin-bottom: 30px;
+    /* margin-bottom: 5px; */
+    margin: 0;
 }
 
 .grid-item {
@@ -150,7 +151,7 @@
     grid-template-columns: 1fr 6fr 4fr 1fr; /* 1:6:4:1 layout */
     gap: 20px; /* Space between grid items */
     height: 50vh; /* Dynamic height based on viewport */
-    margin-top: 20px; /* Add some space above the grid */
+    margin-top: 10px; /* Add some space above the grid */
 }
 
 /* Style for the boxes */
