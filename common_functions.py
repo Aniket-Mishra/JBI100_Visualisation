@@ -238,10 +238,11 @@ def get_bar_fig(
         font=dict(color="#26a69a", size=13),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        xaxis=dict(showgrid=False),
-        yaxis=dict(showgrid=False),
+        xaxis=dict(showgrid=False, automargin=True),
+        yaxis=dict(showgrid=False, automargin=True),
         transition={"duration": 800, "easing": "sin-in-out"},
         yaxis_title=yaxis_title,
+        barmode="group",  # Ensure consistent bar mode
     )
     return bar_fig
 
@@ -276,7 +277,7 @@ def get_double_bar_fig(
         title=title,
         legend=dict(
             orientation="h",
-            x=-0.0000001,
+            x=0.5,
             y=1.15,
             xanchor="center",
             yanchor="top",
@@ -285,10 +286,11 @@ def get_double_bar_fig(
         font=dict(color="#26a69a", size=13),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        xaxis=dict(showgrid=False),
-        yaxis=dict(showgrid=False),
+        xaxis=dict(showgrid=False, automargin=True),
+        yaxis=dict(showgrid=False, automargin=True),
         transition={"duration": 800, "easing": "sin-in-out"},
         yaxis_title=yaxis_title,
+        barmode="group",  # Ensure consistent bar mode
     )
     return bar_fig
 

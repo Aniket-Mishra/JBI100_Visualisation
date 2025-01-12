@@ -945,7 +945,7 @@ def main():
             )
         raise PreventUpdate
 
-    app.run_server(debug=False)
+    app.run_server(port=8080, debug=False)
 
 
 if __name__ == "__main__":
