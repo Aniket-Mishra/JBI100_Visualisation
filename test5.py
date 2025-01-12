@@ -894,7 +894,7 @@ def main():
 
             top_sharks_fig.update_layout(
                 # barmode="stack",
-                title="Most Dangerous Sharks by Incident Type",
+                title="Most Dangerous Sharks",
                 legend=dict(
                     orientation="h",
                     x=-0.0000001,
