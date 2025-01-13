@@ -12,7 +12,7 @@ def main():
 
     df = prepare_data(data_path)
     df_all_columns = list(df.columns)
-    print(df_all_columns)
+    # print(df_all_columns)
 
     app = Dash(
         __name__,
@@ -340,7 +340,6 @@ def main():
                 .reset_index(name="count")
             )
             monthly_counts = map_months_for_graphs(monthly_counts)
-
             monthly_bar_fig = get_bar_fig(
                 monthly_counts,
                 "incident_month",
@@ -513,6 +512,7 @@ def main():
             filtered_data = filter_data_single_column_single_value(
                 filtered_data, "incident_month", monthly_incidents
             )
+            filtered_data = map_months_for_graphs(filtered_data)
         if top_sharks_click and "points" in top_sharks_click:
             selected_shark = top_sharks_click["points"][0]["x"]
 
@@ -724,6 +724,7 @@ def main():
         monthly_counts = map_months_for_graphs(monthly_counts)
 
         if radio_value == "together":
+            monthly_counts = map_months_for_graphs(combined_counts)
             monthly_bar_fig = get_bar_fig(
                 monthly_counts,
                 "incident_month",
