@@ -47,8 +47,8 @@ def prepare_data(path: str) -> pd.DataFrame:
     ] = "Others"
     df["injury_severity"] = df["injury_severity"].replace(
         {
-            "major_lacerations": "Maj. Lacerations",
-            "minor_lacerations": "Min. Lacerations",
+            "major_lacerations": "Maj.Lacerations",
+            "minor_lacerations": "Min.Lacerations",
         }
     )
     df["injury_severity"] = df["injury_severity"].fillna("Unknown")
@@ -153,7 +153,7 @@ def get_single_line_plot(
     )
     line_fig.update_layout(
         title=title,
-        font=dict(color="#26a69a", size=13),
+        font=dict(color="#ffd600", size=12),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         xaxis=dict(showgrid=False),
@@ -208,15 +208,15 @@ def get_double_line_fig(
             y=1,
             xanchor="left",
             yanchor="top",
-            font=dict(size=12, color="#26a69a"),
+            font=dict(size=12, color="#ffd600"),
         ),
-        font=dict(color="#26a69a", size=13),
+        font=dict(color="#ffd600", size=12),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         xaxis=dict(showgrid=False),
         yaxis=dict(showgrid=False),
         yaxis_title=yaxis_title,
-        # transition={"duration": 800, "easing": "sin-in-out"},
+        # transition={"duration": 500, "easing": "sin-in-out"},
     )
     return line_fig
 
@@ -235,12 +235,12 @@ def get_bar_fig(
     )
     bar_fig.update_layout(
         title=title,
-        font=dict(color="#26a69a", size=13),
+        font=dict(color="#ffd600", size=12),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         xaxis=dict(showgrid=False, automargin=True),
         yaxis=dict(showgrid=False, automargin=True),
-        transition={"duration": 800, "easing": "sin-in-out"},
+        transition={"duration": 500, "easing": "sin-in-out"},
         yaxis_title=yaxis_title,
         barmode="group",  # Ensure consistent bar mode
     )
@@ -281,14 +281,14 @@ def get_double_bar_fig(
             y=1.15,
             xanchor="center",
             yanchor="top",
-            font=dict(size=12, color="#26a69a"),
+            font=dict(size=12, color="#ffd600"),
         ),
-        font=dict(color="#26a69a", size=13),
+        font=dict(color="#ffd600", size=12),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         xaxis=dict(showgrid=False, automargin=True),
         yaxis=dict(showgrid=False, automargin=True),
-        transition={"duration": 800, "easing": "sin-in-out"},
+        transition={"duration": 500, "easing": "sin-in-out"},
         yaxis_title=yaxis_title,
         barmode="group",  # Ensure consistent bar mode
     )
@@ -313,7 +313,7 @@ def get_pie_chart(
 
     pie_chart.update_layout(
         title=title,
-        font=dict(color="#00796b", size=14),
+        font=dict(color="#ffd600", size=12),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
     )

@@ -77,7 +77,7 @@ def main():
         "Australian Shark Incidents Analysis",
         style={
             "fontSize": "32px",
-            "color": "#26a69a",
+            "color": "#ffd600",
             "textAlign": "center",
             "padding": "10px",
             # "background-color": "#fff",
@@ -406,13 +406,13 @@ def main():
                 title="Most Dangerous Sharks",
                 legend=dict(
                     orientation="h",
-                    x=-0.0000001,
+                    x=0.5,
                     y=1.15,
                     xanchor="center",
                     yanchor="top",
-                    font=dict(size=12, color="#26a69a"),
+                    font=dict(size=12, color="#ffd600"),
                 ),
-                font=dict(color="#26a69a", size=13),
+                font=dict(color="#ffd600", size=12),
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
                 # xaxis_title="Shark Type",
@@ -724,7 +724,7 @@ def main():
         monthly_counts = map_months_for_graphs(monthly_counts)
 
         if radio_value == "together":
-            monthly_counts = map_months_for_graphs(combined_counts)
+            # monthly_counts = map_months_for_graphs(combined_counts)
             monthly_bar_fig = get_bar_fig(
                 monthly_counts,
                 "incident_month",
@@ -824,13 +824,13 @@ def main():
                 title="Most Dangerous Sharks",
                 legend=dict(
                     orientation="h",
-                    x=-0.0000001,
+                    x=0.5,
                     y=1.15,
                     xanchor="center",
                     yanchor="top",
-                    font=dict(size=12, color="#26a69a"),
+                    font=dict(size=12, color="#ffd600"),
                 ),
-                font=dict(color="#26a69a", size=13),
+                font=dict(color="#ffd600", size=12),
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
                 # xaxis_title="Shark Type",
@@ -898,13 +898,13 @@ def main():
                 title="Most Dangerous Sharks",
                 legend=dict(
                     orientation="h",
-                    x=-0.0000001,
+                    x=0.5,
                     y=1.15,
                     xanchor="center",
                     yanchor="top",
-                    font=dict(size=12, color="#26a69a"),
+                    font=dict(size=12, color="#ffd600"),
                 ),
-                font=dict(color="#26a69a", size=13),
+                font=dict(color="#ffd600", size=12),
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
                 # xaxis_title="Shark Type",
