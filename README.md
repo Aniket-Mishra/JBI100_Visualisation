@@ -79,9 +79,13 @@ I have prior experience in plotly, proven by the git history of the projects pro
 2. https://github.com/Aniket-Mishra/data_science_tasks/tree/main/
 
 #### The app itself - References
-Unfortunately Streamlit no longer supports brushiung (Through a 3rd party library). So I had to move my code and rebuild the whole thing using Dash. For that, I referred to multiple youtube playlists, and github repos, stactoverflow, and other projects. They are added to references to my report as well.
-1. Multiple Dash projects: https://www.youtube.com/playlist?list=PLAOxwF8Hem-DwvdkUGqY8pe1AW0Exodli
-2. Advanced callbacks along with deployment: https://www.youtube.com/playlist?list=PLYD54mj9I2JevdabetHsJ3RLCeMyBNKYV
-3. Video that got me started: https://www.youtube.com/watch?v=hSPmj7mK6ng&ab_channel=CharmingData
-4. Referred template: https://github.com/Coding-with-Adam/Dash-by-Plotly/tree/master/Other/Dash_Introduction
+Unfortunately Streamlit no longer supports brushing (Through a 3rd party library). So I had to move my code and rebuild the whole thing using Dash. For that, I referred to the documentation, multiple youtube playlists, and github repos, stactoverflow, and other projects. They are added to references to my report as well. Since I have experience with HTML/CSS as well, I had a decent time working with it.
+1. Dash Docs: https://dash.plotly.com/
+2. Core Components: https://dash.plotly.com/dash-core-components
+3. Multiple Dash projects: https://www.youtube.com/playlist?list=PLAOxwF8Hem-DwvdkUGqY8pe1AW0Exodli
+4. Advanced callbacks along with deployment: https://www.youtube.com/playlist?list=PLYD54mj9I2JevdabetHsJ3RLCeMyBNKYV
+5. Video that got me started: https://www.youtube.com/watch?v=hSPmj7mK6ng&ab_channel=CharmingData
+6. Referred template: https://github.com/Coding-with-Adam/Dash-by-Plotly/tree/master/Other/Dash_Introduction
+7. HTML/CSS related project: https://github.com/Aniket-Mishra/DemoMobileDealerWebsite
+8. HTML/CSS Project 2: https://github.com/codezoned/codezoned.com
 

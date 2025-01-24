@@ -8,7 +8,8 @@ from common_functions import *
 
 
 def main():
-    data_path = "/Users/paniket/TU_Eindhoven/2_Study/Q2_JBI100_Visualisation_4/4_Code/JBI100_Visualisation/data/new_cleaned_updated_data.csv"
+    # Path to data, local
+    data_path = "data/new_cleaned_updated_data.csv"
 
     df = prepare_data(data_path)
     df_all_columns = list(df.columns)
@@ -20,6 +21,7 @@ def main():
         suppress_callback_exceptions=True,
     )
 
+    # Dropdown for state names
     dropdown_states = dcc.Dropdown(
         id="dropdown-states",
         options=[
@@ -31,6 +33,7 @@ def main():
         className="dropdown-container",
     )
 
+    # HTML Div for checkbox
     checkbox_radio_group = html.Div(
         style={"display": "flex", "alignItems": "center", "gap": "10px"},
         children=[
@@ -58,6 +61,7 @@ def main():
         ],
     )
 
+    # Button component group
     reset_buttons = dbc.ButtonGroup(
         [
             dbc.Button(
@@ -73,6 +77,7 @@ def main():
         ]
     )
 
+    # Header - Initially for multipage app
     header_div = html.Div(
         "Australian Shark Incidents Analysis",
         style={
@@ -84,6 +89,7 @@ def main():
         },
     )
 
+    # Main layout - Initially shared layout between multiple pages
     def shared_layout(content_div):
         return dbc.Container(
             [
@@ -121,6 +127,7 @@ def main():
             fluid=True,
         )
 
+    # Graph component - Spans 90% of view (to give space for header)
     def general_content():
         return html.Div(
             style={
@@ -196,6 +203,7 @@ def main():
             ],
         )
 
+    # App layout, click info and page content. Location as I wanted a multi page app initially
     app.layout = html.Div(
         [
             dcc.Store(id="stored-bar-click"),
@@ -213,6 +221,8 @@ def main():
     def display_page(pathname):
         return shared_layout(general_content())
 
+    # Callback - I did it one step at a time, did not have enough time to do multiple functions for each.
+    # I apologize for the huge functions.
     @app.callback(
         [
             Output("incident-trend", "figure"),
@@ -250,6 +260,7 @@ def main():
             State("stored-line-relayout", "data"),
         ],
     )
+    # Funciton that runs on callback. Updates the graphs.
     def update_graphs(
         selected_states,
         checkbox_values,
@@ -276,7 +287,6 @@ def main():
                 "provoked" in checkbox_values
                 and "unprovoked" not in checkbox_values
             ):
-                
 
                 filtered_data = filter_data_single_column_single_value(
                     filtered_data, "provoked_unprovoked", "provoked"
@@ -286,7 +296,6 @@ def main():
                 "unprovoked" in checkbox_values
                 and "provoked" not in checkbox_values
             ):
-                
 
                 filtered_data = filter_data_single_column_single_value(
                     filtered_data, "provoked_unprovoked", "unprovoked"
@@ -295,7 +304,6 @@ def main():
                 "provoked" not in checkbox_values
                 and "unprovoked" not in checkbox_values
             ):
-                
 
                 filtered_data = pd.DataFrame(columns=df_all_columns)
             else:
@@ -356,6 +364,12 @@ def main():
                 "Number of Incidents",
             )
 
+            # These changes are made here but could be moved to a function
+            # Its different thatn regular bar graph functions
+            # Because I am adding number of tupes in the end
+            # Like 18 shark types in others, for example.
+            # Had logic for hover text. I had an old function
+            # That showed the values, got lost somewhere.
             shark_counts = (
                 filtered_data["shark_common_name"].value_counts().reset_index()
             )
@@ -430,6 +444,7 @@ def main():
                 showlegend=False,
                 transition={"duration": 800, "easing": "sin-in-out"},
             )
+            # No clicks, so None
             return (
                 line_fig,
                 bar_fig,
@@ -444,7 +459,7 @@ def main():
                 None,
                 None,
             )
-
+        # All code to change when click/drag action is made
         bar_click = (
             bar_click if ctx_id == "victim-injury-bar" else stored_bar_click
         )
@@ -532,10 +547,15 @@ def main():
         else:
             filtered_data = filter_data_by_states(df, selected_states)
 
+        # All commented code below is becasue:
+        # Bug - clicks caused df to become empty over time
+        # Recommended by the TA (forgot his name, he was awesome)
+        # To make changes at the end.
         if bar_click and "points" in bar_click:
             selected_injury = [bar_click["points"][0]["x"]]
             if selected_injury not in df["victim_injury"].unique():
                 selected_injury = list(df["victim_injury"].unique())
+
             # filtered_data = filter_data_by_states(df, selected_states)
             # filtered_data = filter_data_single_column_single_value(
             #     filtered_data, "victim_injury", selected_injury
@@ -564,6 +584,8 @@ def main():
             # )
         else:
             injury_severity = list(df["injury_severity"].unique())
+
+        # The below could also be a function.
         if monthly_click and "points" in monthly_click:
             valid_months = set(
                 [str(i) for i in range(1, 13)]
@@ -642,20 +664,23 @@ def main():
             start_year = df["incident_year"].min()
             end_year = df["incident_year"].max()
 
-        print(f"{stored_line_relayout=}")
-        print(f"{stored_bar_click=}")
-        print(f"{stored_top_sharks_click=}")
-        print(f"{stored_monthly_click=}")
-        print(f"{stored_injury_severity_click=}")
-        print(f"{stored_site_category_click=}")
-        print(f"{trend_relayout=}")
-        print(f"{bar_click=}")
-        print(f"{top_sharks_click=}")
-        print(f"{monthly_click=}")
-        print(f"{injury_severity_click=}")
-        print(f"{site_category_click=}")
+        # This is here for debugging purposes. Can comment out if needed.
+        # print(f"{stored_line_relayout=}")
+        # print(f"{stored_bar_click=}")
+        # print(f"{stored_top_sharks_click=}")
+        # print(f"{stored_monthly_click=}")
+        # print(f"{stored_injury_severity_click=}")
+        # print(f"{stored_site_category_click=}")
+        # print(f"{trend_relayout=}")
+        # print(f"{bar_click=}")
+        # print(f"{top_sharks_click=}")
+        # print(f"{monthly_click=}")
+        # print(f"{injury_severity_click=}")
+        # print(f"{site_category_click=}")
 
-        print(monthly_incidents)
+        # print(monthly_incidents)
+
+        # Do this in graph functions
         # filtered_data = map_months_for_graphs(filtered_data)
         filtered_data = filtered_data.loc[
             (filtered_data["incident_year"] >= start_year)
@@ -1086,6 +1111,7 @@ def main():
             top_sharks_click,
         )
 
+    # Reset callbacks
     @app.callback(
         [
             Output("dropdown-states", "value"),
