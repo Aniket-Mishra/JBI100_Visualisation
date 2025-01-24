@@ -6,57 +6,6 @@ import plotly.graph_objects as go
 def prepare_data(path: str) -> pd.DataFrame:
 
     df = pd.read_csv(path)
-    df = df.loc[df["provoked_unprovoked"] != "unknown"]
-    df.loc[
-        df["shark_common_name"] == "shark_not_known", "shark_common_name"
-    ] = "unknown"
-    df.loc[
-        df["shark_common_name"] == "bronze whaler shark", "shark_common_name"
-    ] = "bronze whaler"
-    df["shark_common_name"] = df["shark_common_name"].apply(
-        lambda x: x.replace(" shark", "").title()
-    )
-
-    # df["site_category_cleaned"] =
-    df.loc[
-        ~(
-            df["site_category_cleaned"].isin(
-                [
-                    "coastal",
-                    "island_open_ocean",
-                    "estuary_harbour",
-                    "river",
-                    np.nan,
-                ]
-            )
-        ),
-        "site_category_cleaned",
-    ] = "Others"
-    # df["site_category_cleaned"] = df["site_category_cleaned"].fillna("Unknown")
-    df["site_category_cleaned"] = df["site_category_cleaned"].apply(
-        lambda x: x.replace("_", " ").title()
-    )
-
-    df.loc[
-        ~(
-            df["injury_severity"].isin(
-                ["major_lacerations", "minor_lacerations", np.nan]
-            )
-        ),
-        "injury_severity",
-    ] = "Others"
-    df["injury_severity"] = df["injury_severity"].replace(
-        {
-            "major_lacerations": "Maj.Lacerations",
-            "minor_lacerations": "Min.Lacerations",
-        }
-    )
-    df["injury_severity"] = df["injury_severity"].fillna("Unknown")
-
-    df["injury_severity"] = df["injury_severity"].apply(
-        lambda x: str(x).replace("_", " ").title()
-    )
-
     return df
 
 
@@ -228,6 +177,8 @@ def get_bar_fig(
     title: str,
     yaxis_title: str = None,
 ):
+    if xaxis_name.lower().find("month") != -1:
+        df = map_months_for_graphs(df)
     bar_fig = go.Figure(
         data=[
             go.Bar(x=df[xaxis_name], y=df[yaxis_name], marker_color="#26a69a")
@@ -257,6 +208,8 @@ def get_double_bar_fig(
     title,
     yaxis_title: str = None,
 ):
+    if xname.lower().find("month") != -1:
+        combined_counts = map_months_for_graphs(combined_counts)
     bar_fig = go.Figure(
         data=[
             go.Bar(

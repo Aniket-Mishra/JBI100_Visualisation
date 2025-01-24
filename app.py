@@ -8,7 +8,7 @@ from common_functions import *
 
 
 def main():
-    data_path = "/Users/paniket/TU_Eindhoven/2_Study/Q2_JBI100_Visualisation_4/4_Code/JBI100_Visualisation/data/filtered_cleaned_shark_data.csv"
+    data_path = "/Users/paniket/TU_Eindhoven/2_Study/Q2_JBI100_Visualisation_4/4_Code/JBI100_Visualisation/data/new_cleaned_updated_data.csv"
 
     df = prepare_data(data_path)
     df_all_columns = list(df.columns)
@@ -276,6 +276,8 @@ def main():
                 "provoked" in checkbox_values
                 and "unprovoked" not in checkbox_values
             ):
+                
+
                 filtered_data = filter_data_single_column_single_value(
                     filtered_data, "provoked_unprovoked", "provoked"
                 )
@@ -284,6 +286,8 @@ def main():
                 "unprovoked" in checkbox_values
                 and "provoked" not in checkbox_values
             ):
+                
+
                 filtered_data = filter_data_single_column_single_value(
                     filtered_data, "provoked_unprovoked", "unprovoked"
                 )
@@ -291,7 +295,11 @@ def main():
                 "provoked" not in checkbox_values
                 and "unprovoked" not in checkbox_values
             ):
+                
+
                 filtered_data = pd.DataFrame(columns=df_all_columns)
+            else:
+                filtered_data = filter_data_by_states(df, selected_states)
 
             aggregated_data = groupby_count(
                 filtered_data, "incident_year", "count"
@@ -339,7 +347,7 @@ def main():
                 .size()
                 .reset_index(name="count")
             )
-            monthly_counts = map_months_for_graphs(monthly_counts)
+            # monthly_counts = map_months_for_graphs(monthly_counts)
             monthly_bar_fig = get_bar_fig(
                 monthly_counts,
                 "incident_month",
@@ -440,27 +448,61 @@ def main():
         bar_click = (
             bar_click if ctx_id == "victim-injury-bar" else stored_bar_click
         )
+        stored_bar_click = (
+            bar_click if ctx_id == "victim-injury-bar" else stored_bar_click
+        )
+
         site_category_click = (
             site_category_click
             if ctx_id == "site-category-bar"
             else stored_site_category_click
         )
+        stored_site_category_click = (
+            site_category_click
+            if ctx_id == "site-category-bar"
+            else stored_site_category_click
+        )
+
         injury_severity_click = (
             injury_severity_click
             if ctx_id == "injury-severity-bar"
             else stored_injury_severity_click
         )
+        stored_injury_severity_click = (
+            injury_severity_click
+            if ctx_id == "injury-severity-bar"
+            else stored_injury_severity_click
+        )
+
         trend_relayout = (
             trend_relayout
             if ctx_id == "incident-trend"
             else stored_line_relayout
         )
+        stored_line_relayout = (
+            trend_relayout
+            if ctx_id == "incident-trend"
+            else stored_line_relayout
+        )
+
         monthly_click = (
             monthly_click
             if ctx_id == "monthly-incidents-bar"
             else stored_monthly_click
         )
+        stored_monthly_click = (
+            monthly_click
+            if ctx_id == "monthly-incidents-bar"
+            else stored_monthly_click
+            # else None
+        )
+
         top_sharks_click = (
+            top_sharks_click
+            if ctx_id == "top-sharks-bar"
+            else stored_top_sharks_click
+        )
+        stored_top_sharks_click = (
             top_sharks_click
             if ctx_id == "top-sharks-bar"
             else stored_top_sharks_click
@@ -487,38 +529,98 @@ def main():
             and "unprovoked" not in checkbox_values
         ):
             filtered_data = pd.DataFrame(columns=df_all_columns)
+        else:
+            filtered_data = filter_data_by_states(df, selected_states)
 
         if bar_click and "points" in bar_click:
-            selected_injury = bar_click["points"][0]["x"]
-
-            filtered_data = filter_data_single_column_single_value(
-                filtered_data, "victim_injury", selected_injury
-            )
+            selected_injury = [bar_click["points"][0]["x"]]
+            if selected_injury not in df["victim_injury"].unique():
+                selected_injury = list(df["victim_injury"].unique())
+            # filtered_data = filter_data_by_states(df, selected_states)
+            # filtered_data = filter_data_single_column_single_value(
+            #     filtered_data, "victim_injury", selected_injury
+            # )
+        else:
+            selected_injury = list(df["victim_injury"].unique())
         if site_category_click and "points" in site_category_click:
-            site_category = site_category_click["points"][0]["x"]
+            site_category = [site_category_click["points"][0]["x"]]
+            if site_category not in df["site_category_cleaned"].unique():
+                site_category = list(df["site_category_cleaned"].unique())
+            # filtered_data = filter_data_by_states(df, selected_states)
 
-            filtered_data = filter_data_single_column_single_value(
-                filtered_data, "site_category_cleaned", site_category
-            )
+            # filtered_data = filter_data_single_column_single_value(
+            #     filtered_data, "site_category_cleaned", site_category
+            # )
+        else:
+            site_category = list(df["site_category_cleaned"].unique())
         if injury_severity_click and "points" in injury_severity_click:
-            injury_severity = injury_severity_click["points"][0]["x"]
+            injury_severity = [injury_severity_click["points"][0]["x"]]
+            if injury_severity not in df["injury_severity"].unique():
+                injury_severity = list(df["injury_severity"].unique())
+            # filtered_data = filter_data_by_states(df, selected_states)
 
-            filtered_data = filter_data_single_column_single_value(
-                filtered_data, "injury_severity", injury_severity
-            )
+            # filtered_data = filter_data_single_column_single_value(
+            #     filtered_data, "injury_severity", injury_severity
+            # )
+        else:
+            injury_severity = list(df["injury_severity"].unique())
         if monthly_click and "points" in monthly_click:
-            monthly_incidents = monthly_click["points"][0]["x"]
-
-            filtered_data = filter_data_single_column_single_value(
-                filtered_data, "incident_month", monthly_incidents
+            valid_months = set(
+                [str(i) for i in range(1, 13)]
+                + [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                ]
             )
-            filtered_data = map_months_for_graphs(filtered_data)
+
+            x_value = monthly_click["points"][0].get("x")
+            month_name_to_number = {
+                "Jan": 1,
+                "Feb": 2,
+                "Mar": 3,
+                "Apr": 4,
+                "May": 5,
+                "Jun": 6,
+                "Jul": 7,
+                "Aug": 8,
+                "Sep": 9,
+                "Oct": 10,
+                "Nov": 11,
+                "Dec": 12,
+            }
+
+            if x_value in month_name_to_number:
+                x_value = month_name_to_number[x_value]
+            if str(x_value) in valid_months:
+                monthly_incidents = [x_value]
+            else:
+                monthly_click = None
+                monthly_incidents = list(df["incident_month"].unique())
+        else:
+            monthly_click = None
+            monthly_incidents = list(df["incident_month"].unique())
+
         if top_sharks_click and "points" in top_sharks_click:
-            selected_shark = top_sharks_click["points"][0]["x"]
+            selected_shark = [top_sharks_click["points"][0]["x"]]
+            if selected_shark not in df["shark_common_name"].unique():
+                selected_shark = list(df["shark_common_name"].unique())
+            # filtered_data = filter_data_by_states(df, selected_states)
 
-            filtered_data = filter_data_single_column_single_value(
-                filtered_data, "shark_common_name", selected_shark
-            )
+            # filtered_data = filter_data_single_column_single_value(
+            #     filtered_data, "shark_common_name", selected_shark
+            # )
+        else:
+            selected_shark = list(df["shark_common_name"].unique())
         if (
             trend_relayout
             and "xaxis.range[0]" in trend_relayout
@@ -526,10 +628,49 @@ def main():
         ):
             start_year = int(float(trend_relayout["xaxis.range[0]"]))
             end_year = int(float(trend_relayout["xaxis.range[1]"]))
-            filtered_data = filtered_data[
-                (filtered_data["incident_year"] >= start_year)
-                & (filtered_data["incident_year"] <= end_year)
-            ]
+            if start_year not in df["incident_year"].unique():
+                start_year = df["incident_year"].min()
+            if end_year not in df["incident_year"].unique():
+                end_year = df["incident_year"].max()
+            # filtered_data = filter_data_by_states(df, selected_states)
+
+            # filtered_data = filtered_data[
+            #     (filtered_data["incident_year"] >= start_year)
+            #     & (filtered_data["incident_year"] <= end_year)
+            # ]
+        else:
+            start_year = df["incident_year"].min()
+            end_year = df["incident_year"].max()
+
+        print(f"{stored_line_relayout=}")
+        print(f"{stored_bar_click=}")
+        print(f"{stored_top_sharks_click=}")
+        print(f"{stored_monthly_click=}")
+        print(f"{stored_injury_severity_click=}")
+        print(f"{stored_site_category_click=}")
+        print(f"{trend_relayout=}")
+        print(f"{bar_click=}")
+        print(f"{top_sharks_click=}")
+        print(f"{monthly_click=}")
+        print(f"{injury_severity_click=}")
+        print(f"{site_category_click=}")
+
+        print(monthly_incidents)
+        # filtered_data = map_months_for_graphs(filtered_data)
+        filtered_data = filtered_data.loc[
+            (filtered_data["incident_year"] >= start_year)
+            & (filtered_data["incident_year"] <= end_year)
+            & (filtered_data["victim_injury"].isin(selected_injury))
+            & (filtered_data["site_category_cleaned"].isin(site_category))
+            & (filtered_data["shark_common_name"].isin(selected_shark))
+            & (filtered_data["incident_month"].isin(monthly_incidents))
+            & (filtered_data["injury_severity"].isin(injury_severity))
+        ]
+
+        print(df.shape)
+        print(filtered_data.shape)
+        print("\n\n")
+        # filtered_data = map_months_for_graphs(filtered_data)
 
         aggregated_data = groupby_count(
             filtered_data, "incident_year", "count"
@@ -721,7 +862,7 @@ def main():
             .size()
             .reset_index(name="count")
         )
-        monthly_counts = map_months_for_graphs(monthly_counts)
+        # monthly_counts = map_months_for_graphs(monthly_counts)
 
         if radio_value == "together":
             # monthly_counts = map_months_for_graphs(combined_counts)
@@ -755,7 +896,7 @@ def main():
                 on="incident_month",
                 how="outer",
             ).fillna(0)
-            combined_counts = map_months_for_graphs(combined_counts)
+            # combined_counts = map_months_for_graphs(combined_counts)
             monthly_bar_fig = get_double_bar_fig(
                 combined_counts,
                 xname="incident_month",
@@ -914,6 +1055,22 @@ def main():
                 transition={"duration": 800, "easing": "sin-in-out"},
             )
 
+        # selected_states,
+        # checkbox_values,
+        # radio_value,
+        # bar_click,
+        # site_category_click,
+        # injury_severity_click,
+        # monthly_click,
+        # top_sharks_click,
+        # trend_relayout,
+        # reset_click,
+        # stored_bar_click,
+        # stored_site_category_click,
+        # stored_injury_severity_click,
+        # stored_monthly_click,
+        # stored_top_sharks_click,
+        # stored_line_relayout,
         return (
             line_fig,
             bar_fig,
