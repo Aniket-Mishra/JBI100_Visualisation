@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from dash.exceptions import PreventUpdate
 from common_functions import *
+import copy
 
 
 def main():
@@ -463,65 +464,71 @@ def main():
         bar_click = (
             bar_click if ctx_id == "victim-injury-bar" else stored_bar_click
         )
-        stored_bar_click = (
-            bar_click if ctx_id == "victim-injury-bar" else stored_bar_click
-        )
+        # stored_bar_click = (
+        #     bar_click if ctx_id == "victim-injury-bar" else stored_bar_click
+        # )
+        stored_bar_click = copy.deepcopy(bar_click)
 
         site_category_click = (
             site_category_click
             if ctx_id == "site-category-bar"
             else stored_site_category_click
         )
-        stored_site_category_click = (
-            site_category_click
-            if ctx_id == "site-category-bar"
-            else stored_site_category_click
-        )
+        # stored_site_category_click = (
+        #     site_category_click
+        #     if ctx_id == "site-category-bar"
+        #     else stored_site_category_click
+        # )
+        stored_site_category_click = copy.deepcopy(site_category_click)
 
         injury_severity_click = (
             injury_severity_click
             if ctx_id == "injury-severity-bar"
             else stored_injury_severity_click
         )
-        stored_injury_severity_click = (
-            injury_severity_click
-            if ctx_id == "injury-severity-bar"
-            else stored_injury_severity_click
-        )
+        # stored_injury_severity_click = (
+        #     injury_severity_click
+        #     if ctx_id == "injury-severity-bar"
+        #     else stored_injury_severity_click
+        # )
+        stored_injury_severity_click = copy.deepcopy(injury_severity_click)
 
         trend_relayout = (
             trend_relayout
             if ctx_id == "incident-trend"
             else stored_line_relayout
         )
-        stored_line_relayout = (
-            trend_relayout
-            if ctx_id == "incident-trend"
-            else stored_line_relayout
-        )
+        # stored_line_relayout = (
+        #     trend_relayout
+        #     if ctx_id == "incident-trend"
+        #     else stored_line_relayout
+        # )
+        stored_line_relayout = copy.deepcopy(trend_relayout)
 
         monthly_click = (
             monthly_click
             if ctx_id == "monthly-incidents-bar"
             else stored_monthly_click
         )
-        stored_monthly_click = (
-            monthly_click
-            if ctx_id == "monthly-incidents-bar"
-            else stored_monthly_click
-            # else None
-        )
+        # stored_monthly_click = (
+        #     monthly_click
+        #     if ctx_id == "monthly-incidents-bar"
+        #     else stored_monthly_click
+        #     # else None
+        # )
+        stored_monthly_click = copy.deepcopy(monthly_click)
 
         top_sharks_click = (
             top_sharks_click
             if ctx_id == "top-sharks-bar"
             else stored_top_sharks_click
         )
-        stored_top_sharks_click = (
-            top_sharks_click
-            if ctx_id == "top-sharks-bar"
-            else stored_top_sharks_click
-        )
+        # stored_top_sharks_click = (
+        #     top_sharks_click
+        #     if ctx_id == "top-sharks-bar"
+        #     else stored_top_sharks_click
+        # )
+        stored_top_sharks_click = copy.deepcopy(top_sharks_click)
 
         filtered_data = filter_data_by_states(df, selected_states)
 
