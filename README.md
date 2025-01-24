@@ -1,14 +1,18 @@
 # README
 
-### This contains information on how to setup and run the code
-### IT also contains information on the code itself, where and how it was used and written.
+### This contains the following information"
+1. How to setup and run the code
+2. The code itself, where and how it was used and written.
+   1. More details can be found by following the git history of the project using this link:
+   2. https://github.com/Aniket-Mishra/JBI100_Visualisation/commits/main/
 
 ## Getting the code
 #### If Github:
 Code location:
 https://github.com/Aniket-Mishra/JBI100_Visualisation
 
-- It is a private repo. Can add access if needed.
+- It is a private repo. I've temporarily made it public to show the history of the code.
+- Can add access if needed for the future. I do not wish to keep this public as it can be used by future students.
 - Cloning: (ssh)
 	- git clone git@github.com:Aniket-Mishra/JBI100_Visualisation.git
 
@@ -58,3 +62,26 @@ For windows, they'll be slightly different. I've added links to docs.
 	It'll open the app
 
 ## About the code:
+
+Description: Initially I implemented the whole app using Python, Streamlit, and plotly. It was completely on my own, except some syntax things from my previous projects and google. I reused a lot of my old code.
+Source: I have been using streamlit and plotly for over 5 years now. I am quite comfortable with my libraries of choice.
+
+#### Pandas code - References:
+The pandas code is completely my own albeit some googling for some syntax here and there. I have 4+ years of professional experience in Python, dealing with ETL pipelines, mostly using pandas and polars.
+Example personal projects to prove track record (NDA on professonal code):
+1. https://github.com/Aniket-Mishra/exploration_of_data
+2. https://github.com/Aniket-Mishra/playing-with-data
+3. https://github.com/Aniket-Mishra/Sales-Analysis-and-Reporting
+
+#### Plotly code - References:
+I have prior experience in plotly, proven by the git history of the projects provided below. I used them as reference for graphs and data manipulation/analysis and the plotly code:
+1. https://github.com/Aniket-Mishra/playing-with-data
+2. https://github.com/Aniket-Mishra/data_science_tasks/tree/main/
+
+#### The app itself - References
+Unfortunately Streamlit no longer supports brushiung (Through a 3rd party library). So I had to move my code and rebuild the whole thing using Dash. For that, I referred to multiple youtube playlists, and github repos, stactoverflow, and other projects. They are added to references to my report as well.
+1. Multiple Dash projects: https://www.youtube.com/playlist?list=PLAOxwF8Hem-DwvdkUGqY8pe1AW0Exodli
+2. Advanced callbacks along with deployment: https://www.youtube.com/playlist?list=PLYD54mj9I2JevdabetHsJ3RLCeMyBNKYV
+3. Video that got me started: https://www.youtube.com/watch?v=hSPmj7mK6ng&ab_channel=CharmingData
+4. Referred template: https://github.com/Coding-with-Adam/Dash-by-Plotly/tree/master/Other/Dash_Introduction
+
